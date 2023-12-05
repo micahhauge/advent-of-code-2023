@@ -1,7 +1,8 @@
 import { parseInput } from ".";
 
 export async function solve() {
-  const input = await parseInput();
+  const [inputSeeds, mapOfMaps] = await parseInput();
+  console.log(inputSeeds, mapOfMaps);
 
   return "Not implemented.";
 }
