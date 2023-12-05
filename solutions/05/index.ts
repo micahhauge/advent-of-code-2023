@@ -27,20 +27,28 @@ export async function parseInput(example = false) {
       };
     });
 
-    const map: Record<string, string> = {};
-    mapValues.forEach(({ destStart, sourceStart, rangeLength }) => {
-      for (let i = 0; i < rangeLength; i++) {
-        const dest = destStart + i;
-        const source = sourceStart + i;
-        map[source] = `${dest}`;
-      }
-    });
+    function getNexValue(input: string) {
+      const inputNum = Number(input);
+      let output = input;
 
-    return { mapName, sourceItemName, destItemName, mapValues, map };
+      mapValues.forEach(({ destStart, sourceStart, rangeLength }) => {
+        console.log({ input, destStart, sourceStart, rangeLength });
+        if (inputNum >= sourceStart && inputNum < sourceStart + rangeLength) {
+          console.log("here");
+          const distanceInRange = inputNum - sourceStart;
+          output = String(destStart + distanceInRange);
+        }
+        console.log("no match");
+      });
+
+      return output;
+    }
+
+    return { mapName, sourceItemName, destItemName, mapValues, getNexValue };
   });
 
-  const mapOfMaps = maps.reduce<Record<string, Record<string, string>>>(
-    (acc, map) => ({ ...acc, [map.mapName]: map.map }),
+  const mapOfMaps = maps.reduce<Record<string, (input: string) => string>>(
+    (acc, map) => ({ ...acc, [map.mapName]: map.getNexValue }),
     {},
   );
 
