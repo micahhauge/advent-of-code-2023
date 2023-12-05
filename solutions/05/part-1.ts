@@ -13,21 +13,23 @@ export async function solve() {
     const humidity = mapOfMaps["temperature-to-humidity"](temperature);
     const location = mapOfMaps["humidity-to-location"](humidity);
 
-    // console.log({
-    //   seedValue,
-    //   soil,
-    //   fertilizer,
-    //   water,
-    //   light,
-    //   temperature,
-    //   humidity,
-    //   location,
-    // });
+    console.log({
+      seedValue,
+      soil,
+      fertilizer,
+      water,
+      light,
+      temperature,
+      humidity,
+      location,
+    });
 
     return location;
   }
 
-  const allLocations = inputSeeds.map(seedValueToLocation);
+  const allLocations = inputSeeds
+    .map(seedValueToLocation)
+    .map((i) => Number(i));
 
   // console.log("seed 79", seedValueToLocation("79"));
 

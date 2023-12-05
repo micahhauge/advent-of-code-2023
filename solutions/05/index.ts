@@ -4,7 +4,7 @@ import * as two from "./part-2";
 console.log(`Part 1: `, await one.solve());
 // console.log(`Part 2: `, await two.solve());
 
-export async function parseInput(example = false) {
+export async function parseInput(example = true) {
   const file = `${import.meta.dir}/input${example ? "-example" : ""}.txt`;
   const input = await Bun.file(file).text();
 
@@ -32,13 +32,17 @@ export async function parseInput(example = false) {
       let output = input;
 
       mapValues.forEach(({ destStart, sourceStart, rangeLength }) => {
-        console.log({ input, destStart, sourceStart, rangeLength });
-        if (inputNum >= sourceStart && inputNum < sourceStart + rangeLength) {
-          console.log("here");
+        // console.log({ input, destStart, sourceStart, rangeLength });
+
+        const sourceEnd = sourceStart + rangeLength - 1;
+        // range: 1
+        // 2
+        // input: 2
+        if (inputNum >= sourceStart && inputNum <= sourceEnd) {
           const distanceInRange = inputNum - sourceStart;
           output = String(destStart + distanceInRange);
         }
-        console.log("no match");
+        // console.log("no match");
       });
 
       return output;
