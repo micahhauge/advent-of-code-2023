@@ -1,36 +1,38 @@
-import * as one from "./part-1";
-import * as two from "./part-2";
+import { Race, parseInput } from ".";
+import { map } from "lodash";
 
-console.log(`Part 1: `, await one.solve());
-// console.log(`Part 2: `, await two.solve());
+export async function solve() {
+  const { races } = await parseInput();
 
-export type Race = {
-  time: number;
-  distanceRecord: number;
-};
+  const waysForEachRace = races.map((r) => waysToWinRace(r));
 
-export async function parseInput(example = false) {
-  const file = `${import.meta.dir}/input${example ? "-example" : ""}.txt`;
-  const input = (await Bun.file(file).text()).split("\n");
+  console.log(waysToWinRace(races[0]));
 
-  const times = input[0]
-    .trim()
-    .split(": ")[1]
-    .trim()
-    .split(/\s+/)
-    .map((t) => Number(t));
-  const distanceRecords = input[1]
-    .trim()
-    .split(":")[1]
-    .trim()
-    .split(/\s+/)
-    .map((t) => Number(t));
+  return waysForEachRace.reduce((a, b) => a * b, 1);
+}
 
-  const races: Race[] = [];
+function waysToWinRace(race: Race) {
+  let ways = 0;
+  for (let i = 0; i < race.time; i++) {
+    if (getDistanceForTime(i, race.time) > race.distanceRecord) {
+      ways++;
+    }
+  }
+  return ways;
+}
 
-  times.forEach((time, i) => {
-    races.push({ time, distanceRecord: distanceRecords[i] });
-  });
+function getDistanceForTime(timeHeld: number, totalTime: number) {
+  let speed = 0;
+  let distance = 0;
 
-  return { races };
+  for (let i = 0; i < timeHeld; i++) {
+    speed += 1;
+  }
+  const timeLeft = totalTime - timeHeld;
+
+  for (let i = 0; i < timeLeft; i++) {
+    distance += speed;
+  }
+
+  return distance;
 }
