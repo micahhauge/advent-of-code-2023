@@ -1,10 +1,15 @@
 import * as one from "./part-1";
 import * as two from "./part-2";
 
-console.log(`Part 1: `, await one.solve());
-// console.log(`Part 2: `, await two.solve());
+// console.log(`Part 1: `, await one.solve());
+console.log(`Part 2: `, await two.solve());
 
-export async function parseInput(example = true) {
+export type Race = {
+  time: number;
+  distanceRecord: number;
+};
+
+export async function parseInput(example = false) {
   const file = `${import.meta.dir}/input${example ? "-example" : ""}.txt`;
   const input = (await Bun.file(file).text()).split("\n");
 
@@ -21,5 +26,11 @@ export async function parseInput(example = true) {
     .split(/\s+/)
     .map((t) => Number(t));
 
-  return { times, distanceRecords };
+  const races: Race[] = [];
+
+  times.forEach((time, i) => {
+    races.push({ time, distanceRecord: distanceRecords[i] });
+  });
+
+  return { races };
 }
