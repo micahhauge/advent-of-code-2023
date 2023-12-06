@@ -1,8 +1,32 @@
 import { parseInput } from ".";
-import { min } from "lodash";
+import { chunk } from "lodash";
 
 export async function solve() {
+  console.log("solving part 2...");
   const { inputSeeds, mapOfMaps } = await parseInput();
+
+  const inputSeedNumbers = inputSeeds.map((i) => Number(i));
+  const inputSeedPairs = chunk(inputSeedNumbers, 2);
+  let minLocation = Number.POSITIVE_INFINITY;
+
+  console.log(`processing ${inputSeedPairs.length} pairs...`);
+
+  for (let i = 0; i < inputSeedPairs.length; i++) {
+    const seedStart = inputSeedPairs[i][0];
+    const count = inputSeedPairs[i][1];
+
+    console.log(
+      `Processing seed pair ${i}: ${JSON.stringify({ seedStart, count })}`,
+    );
+
+    for (let j = 0; j <= count; j++) {
+      const location = seedValueToLocation(String(seedStart + j));
+      const locNum = Number(location);
+      if (locNum < minLocation) {
+        minLocation = locNum;
+      }
+    }
+  }
 
   function seedValueToLocation(seedValue: string) {
     const soil = mapOfMaps["seed-to-soil"](seedValue);
@@ -13,27 +37,10 @@ export async function solve() {
     const humidity = mapOfMaps["temperature-to-humidity"](temperature);
     const location = mapOfMaps["humidity-to-location"](humidity);
 
-    console.log({
-      seedValue,
-      soil,
-      fertilizer,
-      water,
-      light,
-      temperature,
-      humidity,
-      location,
-    });
-
     return location;
   }
 
-  const allLocations = inputSeeds
-    .map(seedValueToLocation)
-    .map((i) => Number(i));
-
-  // console.log("seed 79", seedValueToLocation("79"));
-
-  return min(allLocations);
+  return minLocation;
 }
 
 export type ItemName =

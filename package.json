@@ -15,5 +15,10 @@
   "scripts": {
     "scaffold": "bun ./scripts/scaffold.ts",
     "solve": "bun ./scripts/solve.ts"
+  },
+  "dependencies": {
+    "@supercharge/promise-pool": "^3.1.0",
+    "@types/lodash": "^4.14.202",
+    "lodash": "^4.17.21"
   }
 }
