@@ -14,6 +14,12 @@ if (isNaN(parseInt(day, 10))) {
 
 // Copy over scaffold files to given day directory
 const solutionDir = `solutions/${dayPadded}`;
+
+const indexFile = Bun.file(`${solutionDir}/index.ts`);
+if (await indexFile.exists()) {
+  throw new Error(`Solution for day ${dayPadded} already exists.`);
+}
+
 await mkdir(solutionDir, { recursive: true });
 
 const scaffoldDir = ".scaffold";
