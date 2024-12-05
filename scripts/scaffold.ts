@@ -13,7 +13,7 @@ if (isNaN(parseInt(day, 10))) {
 }
 
 // Copy over scaffold files to given day directory
-const solutionDir = `solutions/${dayPadded}`;
+const solutionDir = `2024/solutions/${dayPadded}`;
 
 const indexFile = Bun.file(`${solutionDir}/index.ts`);
 if (await indexFile.exists()) {
@@ -40,7 +40,7 @@ for await (const file of scaffoldGlob.scan(scaffoldDir)) {
 }
 
 // Fetch the input for the day
-const response = await fetch(`https://adventofcode.com/2023/day/${day}/input`, {
+const response = await fetch(`https://adventofcode.com/2024/day/${day}/input`, {
   headers: {
     cookie: `session=${process.env.ADVENT_SESSION}`,
   },
