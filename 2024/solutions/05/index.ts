@@ -4,7 +4,7 @@ import * as two from "./part-2";
 console.log(`Part 1: `, await one.solve());
 console.log(`Part 2: `, await two.solve());
 
-type RuleTuple = [number, number];
+export type RuleTuple = [number, number];
 
 export async function parseInput(example = false) {
   const file = `${import.meta.dir}/input${example ? "-example" : ""}.txt`;
