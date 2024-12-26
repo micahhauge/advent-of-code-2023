@@ -10,6 +10,12 @@ type Lock = {
   heights: [number, number, number, number, number];
 };
 
+type KeyLockCombo = {
+  lock: Lock;
+  key: Key;
+  keyFitsInLock: boolean;
+};
+
 const mockLock = `#####
 .####
 .####
@@ -19,53 +25,63 @@ const mockLock = `#####
 .....`;
 
 const mockKey = `.....
+.....
+.....
 #....
-#....
-#...#
+#.#..
 #.#.#
-#.###
 #####`;
 
 export async function solve() {
-  const input = await parseInput(true);
+  const input = await parseInput();
 
-  parseRawInput(input);
+  const { keys, locks } = parseRawInput(input);
 
-  // const lines = input.split("\n");
-  const t = parseLock(mockLock);
-  const k = parseKey(mockKey);
-  console.log(k);
+  const keyLockCombos: KeyLockCombo[] = [];
 
-  return "Not implemented.";
+  locks.forEach((lock) => {
+    keys.forEach((key) => {
+      const keyFitsInLock = checkIfKeyFitsInLock(key, lock);
+      keyLockCombos.push({ lock, key, keyFitsInLock });
+    });
+  });
+
+  const validCombos = keyLockCombos.filter((combo) => combo.keyFitsInLock);
+
+  return validCombos.length;
+}
+
+function checkIfKeyFitsInLock(key: Key, lock: Lock) {
+  for (let i = 0; i < key.heights.length; i++) {
+    const keyHeight = key.heights[i];
+    const lockHeight = lock.heights[i];
+
+    if (keyHeight + lockHeight > 5) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function parseRawInput(rawInput: string) {
-  const rawKeysAndLocks = rawInput.split("\n\n");
+  const rawKeysAndLocks = rawInput.trim().split("\n\n");
   const keysAndLocks = rawKeysAndLocks.map(parseRawInputToKeyOrLock);
 
-  console.log(keysAndLocks);
+  const keys = keysAndLocks.filter((keyOrLock) => keyOrLock.type === "key");
+  const locks = keysAndLocks.filter((keyOrLock) => keyOrLock.type === "lock");
+
+  return { keys, locks };
 }
 
 function parseRawInputToKeyOrLock(rawKeyOrLock: string) {
   if (rawKeyOrLock.startsWith("#")) {
-    return parseKey(rawKeyOrLock);
+    return parseLock(rawKeyOrLock);
   }
 
-  return parseLock(rawKeyOrLock);
+  return parseKey(rawKeyOrLock);
 }
 
-/**
- * 
- *
-  #####
-  .####
-  .####
-  .####
-  .#.#.
-  .#...
-  .....
- 
- */
 function parseLock(rawLock: string): Lock {
   const lockLines = rawLock.split("\n").slice(1);
   const heights: Lock["heights"] = [0, 0, 0, 0, 0];
@@ -97,6 +113,9 @@ function parseKey(rawKey: string): Key {
       }
     }
   });
+  console.log("parsing key");
+  console.log(rawKey);
+  console.log(heights);
 
   return {
     type: "key",
